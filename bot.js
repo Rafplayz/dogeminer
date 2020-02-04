@@ -21,72 +21,25 @@ client.on('ready', () => {
 });
 // message responses
 client.on('message', msg => {
-    var path = 'userinfo/' + msg.author.id + '.txt'
-    var rl = readline.createInterface({
+    const path = 'userinfo/' + msg.author.id + '.txt'
+    const rl = readline.createInterface({
             input: fs.createReadStream(path)
     });
-    const picksMax = '5'
-    const lootMax = '5'
-    var cntr = 0
-    function newLineSplitter(str) { 
-      
-    // Function to split string 
-        var string = str.split("\n"); 
-      
-        return string; 
-    } 
     if (msg.content == '!dm findloot') {
-        if(lootvar == 0) {
-            const CommonPick = new Discord.Attachment('C:\DiscordBot\Common_Pickaxe.png')
-            msg.reply('You have found Common Pickaxe!\n*Standard pickaxe, issued to all Shibe Miners circa 2018.*\n:pick:: 1/' + picksMax + ' :gem:: 0/' +  lootMax)
-            msg.reply(CommonPick)
-            lootvar = lootvar + 1
                          
         }
-        else if(lootvar == 1 && Math.random() + luck < 0.8) {
-            msg.reply('You have found Rare Pickaxe!\n*It is hard to explain, but it feels... better?*\nYou have found 2 out of 5 pieces of loot!')
-            lootvar = lootvar + 1
-        }
-        else if(lootvar == 1 && Math.random() + luck > 0.8) {
-            msg.reply('Sorry, you did not find anything this time! :(')
-        }
-        else if(lootvar == 2 && Math.random() + luck < 0.7) {
-            msg.reply('You have found Glow Stick!\n*Somehow, it is easier to mine with this?*\nYou have found 3 out of 5 pieces of loot!')
-            lootvar = lootvar + 1
-        }
-        else if(lootvar == 2 && Math.random() + luck > 0.7) {
-            msg.reply('Sorry, you did not find anything this time! :(')
-        }
-        else {
-            msg.reply('Sorry, the dev has not created any other loot pieces :(')
-            
-        }
+        
+    else if (msg.content == '!dm luckup' && luck < 0.5 ) {
         
     }
-    else if (msg.content == '!dm luckup' && luck < 0.5 ) {
-        msg.reply('You have increased luck by 1 for the whole server!') 
-        luck = luck + 0.01
-    }
     else if (msg.content == '!dm mine') {
-        var lines = fs.readFileSync(`userinfo/${msg.author.id}` + '.txt')
-        var newLines = newLineSplitter(lines)
-        newLines.forEach(newNewLines =>{
-            Number(newNewLines)
-        })
-        newNewLines[0]++;
-        fs.writeFileSync(`userinfo/${msg.author.id}` + '.txt', newNewLines[0] + "\n" + newNewLines[1])
-        console.log('File rewritten @ userinfo/' + msg.author.id)
-        msg.reply(`Mined successfully!\nCoins: ${newCoins}\nShibe Miners: ${Helper1}`)
+        
     }
     else if (msg.content == '!dm help') {
-        msg.reply('the *currently working* commands are:\n**FIRSTLY, START WITH !dm start**, other commands are:\n!dm mine,\n!dm help\n!dm findloot\nThe developer is actively adding new commands everyday, so check back!')
+        
     }
     else if (msg.content == '!dm stats') {
-        msg.reply("Fetching stats...")
-        rl.on('line', function(line) {
-            if (cntr++ == 0) {
-                console.log(`Stats read in userinfo/${msg.author.id} by ${msg.author.username}`)
-                msg.reply(`Found stats!\n(coin name here) count: ${line}`)
+        
             }
         });
     }
@@ -95,7 +48,7 @@ client.on('message', msg => {
         let startFile = fs.writeFile('userinfo/' + msg.author.id + '.txt', '0\n0\n0', (err) => {
             if (err) throw err;
             console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username)
-            msg.reply("Finished! You've started with 0 (coin name here)!")
+            msg.reply("Finished! You've started with 0 Dogcoins!")
         })
     }
 });
