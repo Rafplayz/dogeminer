@@ -1,2 +1,5 @@
-# dogeminer
-This is a place where i can keep all my discord bot things in one spot!
+# Dogeminer bot
+Hello! This is where the code for Dogeminer is kept!
+
+The source code may be more horrifying than you expect. viewer discretion is advised
+
