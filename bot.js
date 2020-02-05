@@ -33,7 +33,17 @@ client.on('message', msg => {
         
     }
     else if (msg.content == '!dm mine') {
-        
+        msg.reply("Working....")
+        let fileText = fs.readFileSync(`userinfo/${msg.author.id}`)
+        fileText.split("\n")
+        let fileNumber = parseInt(fileText, 10)
+        let playerCoins = fileNumber[0]
+        let shibeBonus = fileNumber[1]
+        let shibe2Amount = fileNumber[2]
+        let shibe2Bonus = fileNumber[2] * 4
+        let newPlayerCoins = playerCoins + shibeBonus + shibe2Bonus
+        msg.reply('Your new coin amount is: ' + newPlayerCoins)
+        fs.writeFileSync('userinfo/' + msg.author.id, `${fileText[0]}\n${fileText[1]}\n${fileText[2]}`)
     }
     else if (msg.content == '!dm help') {
         
@@ -46,7 +56,7 @@ client.on('message', msg => {
         let startFile = fs.writeFile('userinfo/' + msg.author.id + '.txt', '0\n0\n0', (err) => {
             if (err) throw err;
             console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username)
-            msg.reply("Finished! You've started with 0 Dogcoins!")
+            msg.reply("Finished! You've started with 0 Emmetcoin!")
         })
     }
 });
