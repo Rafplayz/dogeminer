@@ -40,8 +40,6 @@ client.on('message', msg => {
     }
     else if (msg.content == '!dm stats') {
         
-            }
-        });
     }
     else if (msg.content == '!dm start') {
         msg.reply('Working..')
