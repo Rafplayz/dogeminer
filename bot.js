@@ -38,16 +38,30 @@ client.on('message', msg => {
         }
         else {
             msg.reply("Working....")
-            let fileText = fs.readFileSync(`userinfo/${msg.author.id}.txt`)
-            fileText.split("\n")
-            let fileNumber = parseInt(fileText, 10)
-            let playerCoins = fileNumber[0]
-            let shibeBonus = fileNumber[1]
-            let shibe2Amount = fileNumber[2]
-            let shibe2Bonus = fileNumber[2] * 4
+            let fileText = fs.readFileSync(`userinfo/${msg.author.id}.txt`, 'utf8')
+            fileText.split(" ")
+            console.log(fileText)
+            let playerCoins = parseInt(fileText[0], 10)
+            console.log(playerCoins)
+            let shibeBonus = parseInt(fileText[1], 10)
+            console.log(shibeBonus)
+            let shibe2Amount = parseInt(fileText[2], 10)
+            console.log(shibe2Amount)
+            let shibe2Bonus = shibe2Amount * 4
+            console.log(shibe2Bonus)
             let newPlayerCoins = playerCoins + shibeBonus + shibe2Bonus
-            msg.reply('Your new coin amount is: ' + newPlayerCoins)
-            fs.writeFileSync('userinfo/' + msg.author.id + '.txt', `${fileText[0]}\n${fileText[1]}\n${fileText[2]}`)
+            console.log(newPlayerCoins)
+            if (typeof shibeBonus == "number" && typeof shibe2Amount == "number") {
+                if (typeof playerCoins == "number" && typeof shibe2Bonus == "number") {
+                    if (typeof newPlayerCoins == "number") {
+                        fs.writeFileSync('userinfo/' + msg.author.id + '.txt', `${fileText[0]} ${fileText[1]} ${fileText[2]}`)
+                        msg.reply('Your new coin amount is: ' + newPlayerCoins)
+                    }
+                }
+            }
+            else {
+                msg.reply("There was an error processing your request.")
+            }
         }
     }
     else if (msg.content == '!dm help') {
