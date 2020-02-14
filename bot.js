@@ -33,35 +33,17 @@ client.on('message', msg => {
         
     }
     else if (msg.content == '!dm mine') {
-        if (fs.existsSync(`userinfo/${msg.author.id}.txt`) == false) {
+        if (fs.existsSync(`userinfo/${msg.author.id}.json`) == false) {
             msg.reply('You have not started. Do so with **!dm start**.')
         }
         else {
             msg.reply("Working....")
-            let fileText = fs.readFileSync(`userinfo/${msg.author.id}.txt`, 'utf8')
-            fileText.split(" ")
-            console.log(fileText)
-            let playerCoins = parseInt(fileText[0], 10)
-            console.log(playerCoins)
-            let shibeBonus = parseInt(fileText[1], 10)
-            console.log(shibeBonus)
-            let shibe2Amount = parseInt(fileText[2], 10)
-            console.log(shibe2Amount)
-            let shibe2Bonus = shibe2Amount * 4
-            console.log(shibe2Bonus)
-            let newPlayerCoins = playerCoins + shibeBonus + shibe2Bonus
-            console.log(newPlayerCoins)
-            if (typeof shibeBonus == "number" && typeof shibe2Amount == "number") {
-                if (typeof playerCoins == "number" && typeof shibe2Bonus == "number") {
-                    if (typeof newPlayerCoins == "number") {
-                        fs.writeFileSync('userinfo/' + msg.author.id + '.txt', `${fileText[0]} ${fileText[1]} ${fileText[2]}`)
-                        msg.reply('Your new coin amount is: ' + newPlayerCoins)
-                    }
-                }
-            }
-            else {
-                msg.reply("There was an error processing your request.")
-            }
+            let fileText = fs.readFileSync(`userinfo/${msg.author.id}.json`, 'utf8')
+            let fileJSON = JSON.parse(fileText)
+            let miner2bonus = fileJSON.miners2 * 5
+            let finalCoins = fileJSON.balance + fileJSON.miners + miner2bonus
+            fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2}}`)
+            msg.reply("Done! Your new amount of coins is " + finalCoins)
         }
     }
     else if (msg.content == '!dm help') {
@@ -72,7 +54,7 @@ client.on('message', msg => {
     }
     else if (msg.content == '!dm start') {
         msg.reply('Working..')
-        let startFile = fs.writeFile('userinfo/' + msg.author.id + '.txt', '0\n0\n0', (err) => {
+        let startFile = fs.writeFile('userinfo/' + msg.author.id + '.json', '{"balance":0,"miners":0,"miners2":0}', (err) => {
             if (err) throw err;
             console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username +' \n')
             msg.reply("Finished! You've started with 0 Emmetcoin!")
