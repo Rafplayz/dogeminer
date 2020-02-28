@@ -37,6 +37,7 @@ client.on('message', msg => {
             msg.reply('You have not started. Do so with **!dm start**.')
         }
         else {
+            let timeStamp = Math.round((new Date()).getTime() / 1000)
             msg.reply("Working....")
             let fileText = fs.readFileSync(`userinfo/${msg.author.id}.json`, 'utf8')
             let fileJSON = JSON.parse(fileText)
@@ -68,7 +69,14 @@ client.on('message', msg => {
             console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username +' \n')
             msg.reply("Finished! You've started with 0 Emmetcoin!")
         })
+<<<<<<< HEAD
      }
+=======
+    }
+    else if (msg.content == 'ping for lafite') {
+        msg.reply('<@&678326224002744331>')
+    }
+>>>>>>> bdf27d76160fdaa835bb3fc3200dd9fbb91bd38a
 });
 client.login(auth.token);
 /*
