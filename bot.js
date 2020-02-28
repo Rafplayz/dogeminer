@@ -46,6 +46,7 @@ client.on('message', msg => {
             fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2}}`)
             msg.reply("Done! Your new amount of coins is " + finalCoins)
             if (timeStamp <= fileJSON.cooldown +  300) {
+            if (timeStamp <= fileJSON.cooldown +  10) {
                 msg.reply(`Your cooldown has not expired. Remaining time: ${fileJSON.cooldown - timeStamp}s. (ignore the - for now.)`)
             }
             else {
@@ -56,6 +57,7 @@ client.on('message', msg => {
             }
         }
     }
+}
     else if (msg.content == '!dm help') {
         
     }
@@ -69,8 +71,11 @@ client.on('message', msg => {
             console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username +' \n')
             msg.reply("Finished! You've started with 0 Emmetcoin!")
         })
-     }
-    });
+    }
+    else if (msg.content == 'ping for lafite') {
+        msg.reply('<@&678326224002744331>')
+    }
+});
 client.login(auth.token);
 /*
 here is how i envisioned the Dogeminer Bot:
