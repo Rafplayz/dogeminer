@@ -56,7 +56,6 @@ client.on('message', msg => {
             }
         }
     }
-}
     else if (msg.content == '!dm help') {
         
     }
