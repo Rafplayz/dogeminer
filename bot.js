@@ -69,15 +69,8 @@ client.on('message', msg => {
             console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username +' \n')
             msg.reply("Finished! You've started with 0 Emmetcoin!")
         })
-<<<<<<< HEAD
      }
-=======
-    }
-    else if (msg.content == 'ping for lafite') {
-        msg.reply('<@&678326224002744331>')
-    }
->>>>>>> bdf27d76160fdaa835bb3fc3200dd9fbb91bd38a
-});
+    });
 client.login(auth.token);
 /*
 here is how i envisioned the Dogeminer Bot:
