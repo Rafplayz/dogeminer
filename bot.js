@@ -37,13 +37,19 @@ client.on('message', msg => {
             msg.reply('You have not started. Do so with **!dm start**.')
         }
         else {
+            let timeStamp = Math.round((new Date()).getTime() / 1000)
             msg.reply("Working....")
             let fileText = fs.readFileSync(`userinfo/${msg.author.id}.json`, 'utf8')
             let fileJSON = JSON.parse(fileText)
-            let miner2bonus = fileJSON.miners2 * 5
-            let finalCoins = fileJSON.balance + fileJSON.miners + miner2bonus
-            fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2}}`)
-            msg.reply("Done! Your new amount of coins is " + finalCoins)
+            if (timeStamp <= fileJSON.cooldown +  10) {
+                msg.reply(`Your cooldown has not expired. Remaining time: ${fileJSON.cooldown - timeStamp}s. (ignore the - for now.)`)
+            }
+            else {
+                let miner2bonus = fileJSON.miners2 * 5
+                let finalCoins = fileJSON.balance + fileJSON.miners + miner2bonus
+                fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2},"cooldown":${timeStamp}}`)
+                msg.reply("Done! Your new amount of coins is " + finalCoins)
+            }
         }
     }
     else if (msg.content == '!dm help') {
@@ -59,6 +65,9 @@ client.on('message', msg => {
             console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username +' \n')
             msg.reply("Finished! You've started with 0 Emmetcoin!")
         })
+    }
+    else if (msg.content == 'ping for lafite') {
+        msg.reply('<@&678326224002744331>')
     }
 });
 client.login(auth.token);
