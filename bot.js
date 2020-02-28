@@ -45,8 +45,7 @@ client.on('message', msg => {
             let finalCoins = fileJSON.balance + fileJSON.miners + miner2bonus
             fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2}}`)
             msg.reply("Done! Your new amount of coins is " + finalCoins)
-            if (timeStamp <= fileJSON.cooldown +  300) {
-            if (timeStamp <= fileJSON.cooldown +  10) {
+            if (timeStamp <= fileJSON.cooldown +  300) {    
                 msg.reply(`Your cooldown has not expired. Remaining time: ${fileJSON.cooldown - timeStamp}s. (ignore the - for now.)`)
             }
             else {
