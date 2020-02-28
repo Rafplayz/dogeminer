@@ -8,7 +8,7 @@ var readline = require('readline');
 
 // user status
 client.on('ready', () => {
-    const CommonPick = new Discord.Attachment('C:\DiscordBot\imgs\Common Pickaxe.png')
+    const CommonPick = new Discord.Attachment('C:\\DiscordBot\\imgs\\Common Pickaxe.png')
     console.log(`Logged in (yay!) as ${client.user.tag}.`)
     client.user.setActivity(`Early testing! !dm help`);
     console.log("Servers:")
@@ -44,6 +44,15 @@ client.on('message', msg => {
             let finalCoins = fileJSON.balance + fileJSON.miners + miner2bonus
             fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2}}`)
             msg.reply("Done! Your new amount of coins is " + finalCoins)
+            if (timeStamp <= fileJSON.cooldown +  300) {
+                msg.reply(`Your cooldown has not expired. Remaining time: ${fileJSON.cooldown - timeStamp}s. (ignore the - for now.)`)
+            }
+            else {
+                let miner2bonus = fileJSON.miners2 * 5
+                let finalCoins = fileJSON.balance + fileJSON.miners + miner2bonus
+                fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2},"cooldown":${timeStamp}}`)
+                msg.reply("Done! Your new amount of coins is " + finalCoins)
+            }
         }
     }
     else if (msg.content == '!dm help') {
@@ -59,7 +68,7 @@ client.on('message', msg => {
             console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username +' \n')
             msg.reply("Finished! You've started with 0 Emmetcoin!")
         })
-    }
+     }
 });
 client.login(auth.token);
 /*
