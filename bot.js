@@ -4,7 +4,6 @@ const auth = require('./auth.json')
 var lootvar = 0
 var luck = 0
 var fs = require('fs');
-var readline = require('readline');
 
 // user status
 client.on('ready', () => {
@@ -22,9 +21,6 @@ client.on('ready', () => {
 // message responses
 client.on('message', msg => {
     const path = 'userinfo/' + msg.author.id + '.txt'
-    const rl = readline.createInterface({
-            input: fs.createReadStream(path)
-    });
     if (msg.content == '!dm findloot') {
                          
         }
@@ -32,46 +28,98 @@ client.on('message', msg => {
     else if (msg.content == '!dm luckup' && luck < 0.5 ) {
         
     }
+    else if (msg.content == '<:mino:698929338908672040>' && msg.author.id == '207188318130012160') {
+        if (msg.guild.id == '594189803424055525') {
+            msg.channel.send('<:mino:698929338908672040>')
+        }
+    }
+    else if (msg.content == 'up' && msg.author.id == '243151297950253067') {
+        msg.channel.send('**Bot is UP! Commands are able to be run**')
+    }
     else if (msg.content == '!dm mine') {
+        try {
         if (fs.existsSync(`userinfo/${msg.author.id}.json`) == false) {
             msg.reply('You have not started. Do so with **!dm start**.')
         }
         else {
             let timeStamp = Math.round((new Date()).getTime() / 1000)
-            msg.reply("Working....")
             let fileText = fs.readFileSync(`userinfo/${msg.author.id}.json`, 'utf8')
             let fileJSON = JSON.parse(fileText)
-            let miner2bonus = fileJSON.miners2 * 5
-            let finalCoins = fileJSON.balance + fileJSON.miners + miner2bonus
-            fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2}}`)
-            msg.reply("Done! Your new amount of coins is " + finalCoins)
-            if (timeStamp <= fileJSON.cooldown +  300) {    
-                msg.reply(`Your cooldown has not expired. Remaining time: ${fileJSON.cooldown - timeStamp}s. (ignore the - for now.)`)
+            if (timeStamp <= fileJSON.cooldown +  300) {
+                let realCooldown = fileJSON.cooldown - timeStamp
+                let usableCooldown = realCooldown - realCooldown
+                let actualCooldown = usableCooldown - realCooldown
+                msg.reply(`Your cooldown has not expired. Remaining time: ${actualCooldown}/300s.`)
             }
             else {
                 let miner2bonus = fileJSON.miners2 * 5
                 let finalCoins = fileJSON.balance + fileJSON.miners + miner2bonus
                 fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${finalCoins},"miners":${fileJSON.miners},"miners2":${fileJSON.miners2},"cooldown":${timeStamp}}`)
-                msg.reply("Done! Your new amount of coins is " + finalCoins)
+                msg.channel.send({embed:{
+                    title:"⛏️ Mining successful ⛏️",
+                    color:233440,
+                    fields:[{
+                        name:"Coins Accumulated",
+                        value:`+$${fileJSON.miners + miner2bonus}`,
+                        inline:true,
+                    },
+                    {
+                        name:"Pickaxe Shiny-ers",
+                        value:fileJSON.miners,
+                        inline:true,
+                    },
+                    {
+                        inline:true,
+                        name:"Handle Upgrades",
+                        value:fileJSON.miners2,
+                    }]
+                }})
+            }
+            }
+        }
+    catch(err) {
+        console.log("error with person with id " + msg.author.id)
+        msg.reply("There was an error processing your request.")
+    }
+    }
+    else if (msg.content == '!dm store') {
+        msg.reply("purchase items with !dm buy. Items:\n**Pickaxe shiny-er**: *Make your pickaxe a little more gold.*\n**Handle Upgrade**: *Wood is very uncomfortable.*")
+    }
+    else if (msg.content == '!dm buy') {
+        msg.reply("What item do you want to buy?\n1: **Pickaxe shiny-er (!dm buy 1)**, +1 to mining total, 2: **Handle Upgrade (!dm buy 2)**, +5 to mining total")
+        let msgAuthor = msg.author.id;
+    }
+    else if (msg.content == '!dm buy') {
+        if (fs.existsSync(`userinfo/${msg.author.id}`)) {
+            let FileText = fs.readFileSync(`userinfo/${msgAuthor}`)
+            let fileJSON = JSON.parse(FileText)
+            if (fileJSON.balance >= 2) {
+                msg.reply("Purchased one Pickaxe Shiny-er!")
+                fs.writeFileSync(`userinfo/${msg.author.id}.json`,`{"balance":${fileJSON.balance - 2},"miners":${fileJSON.miners + 1},"miners2":${fileJSON.miners2},"cooldown":${fileJSON.cooldown}}`)
+            }
+            else {
+            msg.reply("You do not have enough coins. Required coins: $2.")
             }
         }
     }
     else if (msg.content == '!dm help') {
-        
+        msg.channel.send(`<@${msg.author.id}>, the commands are:\n**!dm mine\n!dm start** (do this first).`)
     }
     else if (msg.content == '!dm stats') {
-        
     }
     else if (msg.content == '!dm start') {
         msg.reply('Working..')
-        let startFile = fs.writeFile('userinfo/' + msg.author.id + '.json', '{"balance":0,"miners":0,"miners2":0}', (err) => {
-            if (err) throw err;
-            console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username +' \n')
-            msg.reply("Finished! You've started with 0 Emmetcoin!")
-        })
+        try {
+            let startFile = fs.writeFile('userinfo/' + msg.author.id + '.json', '{"balance":0,"miners":1    ,"miners2":0}', (err) => {
+                if (err) throw err;
+                console.log(`userinfo/${msg.author.id} file created by user ` + msg.author.username +' \n')
+                msg.reply("Finished! You've started with 0!")
+            })
+        }
+        catch(err) {
+        msg.reply("There was an error processing your request.")
+        console.log("error from " + msg.author.id)
     }
-    else if (msg.content == 'ping for lafite') {
-        msg.reply('<@&678326224002744331>')
     }
 });
 client.login(auth.token);
